@@ -9,6 +9,7 @@ resource "aws_internet_gateway" "main" {
 resource "aws_subnet" "public" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = var.vpc.subnet.public.cidr
+  availability_zone       = var.vpc.availability_zone_id
   map_public_ip_on_launch = true
 
   tags = {

@@ -14,15 +14,14 @@ variable "region" {
 
 variable "vpc" {
   type = object({
-    cidr = string
+    cidr                 = string
+    availability_zone_id = string
     subnet = object({
       public = object({
-        cidr                 = string
-        availability_zone_id = string
+        cidr = string
       })
       private = object({
-        cidr                 = string
-        availability_zone_id = string
+        cidr = string
       })
     })
   })

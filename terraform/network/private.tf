@@ -1,6 +1,7 @@
 resource "aws_subnet" "private" {
-  vpc_id     = aws_vpc.main.id
-  cidr_block = var.vpc.subnet.private.cidr
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = var.vpc.subnet.private.cidr
+  availability_zone = var.vpc.availability_zone_id
 
   tags = {
     Name = "private-${var.constants.environment.id}"
