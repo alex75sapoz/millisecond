@@ -23,8 +23,8 @@ resource "aws_nat_gateway" "main" {
   depends_on = [aws_internet_gateway.main]
 }
 
-resource "aws_route_table" "private" {
-  vpc_id = aws_vpc.main.id
+resource "aws_default_route_table" "private" {
+  default_route_table_id = aws_vpc.main.default_route_table_id
 
   route {
     nat_gateway_id = aws_nat_gateway.main.id
@@ -37,6 +37,6 @@ resource "aws_route_table" "private" {
 }
 
 resource "aws_route_table_association" "private" {
-  route_table_id = aws_route_table.private.id
+  route_table_id = aws_default_route_table.private.id
   subnet_id      = aws_subnet.private.id
 }
