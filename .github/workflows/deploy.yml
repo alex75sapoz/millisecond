@@ -29,10 +29,6 @@ jobs:
         id: checkout
         uses: actions/checkout@v4
 
-      - name: Commit
-        id: commit
-        run: echo "message=$(git log -1 --pretty=%B)" >> $GITHUB_OUTPUT
-
       - name: Python
         id: python
         uses: actions/setup-python@v5
@@ -64,7 +60,7 @@ jobs:
           workspace: ${{ env.TF_WORKSPACE }}
           configuration_version: ${{ steps.configuration.outputs.configuration_version_id }}
           plan_only: ${{ !inputs.apply }}
-          message: '[${{ github.ref_name }}] ${{ steps.commit.outputs.message }}'
+          message: '[${{ github.ref_name }}]'
 
       - name: Output
         uses: hashicorp/tfc-workflows-github/actions/plan-output@v1.3.2
