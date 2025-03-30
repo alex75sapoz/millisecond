@@ -47,7 +47,7 @@ jobs:
           workspace: ${{ vars.TERRAFORM_WORKSPACE_NAME }}
           configuration_version: ${{ steps.configuration.outputs.configuration_version_id }}
           plan_only: ${{ !inputs.apply }}
-          message: '[${{ github.ref_name }}] ${{ github.event.workflow_dispatch.head_commit.message }}'
+          message: '[${{ github.ref_name }}] ${{ steps.commit.outputs.message }}'
       
       - name: Apply
         id: apply
