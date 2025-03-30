@@ -32,7 +32,7 @@ jobs:
           organization: ${{ vars.TERRAFORM_ORGANIZATION_NAME }}
           workspace: ${{ vars.TERRAFORM_WORKSPACE_NAME }}
           speculative: ${{ !inputs.apply }}
-          directory: ${{ github.workspace && '/terraform' }}
+          directory: ./terraform
 
       - name: Plan
         id: plan
