@@ -31,10 +31,12 @@ jobs:
       - name: Python
         id: python
         uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
 
       - name: Test
         id: test
-        run: pytest
+        run: python pytest
 
       - name: Configuration
         id: configuration
