@@ -34,6 +34,9 @@ jobs:
         with:
           python-version: 3.x
 
+      - name: Dependencies
+        run: pip install -r requirements.txt
+
       - name: Test
         id: test
         run: python pytest
