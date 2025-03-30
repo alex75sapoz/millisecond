@@ -14,3 +14,8 @@ module "network" {
   constants = local.constants
   vpc       = var.vpc
 }
+
+module "functions" {
+  source    = "./functions"
+  constants = local.constants
+}
