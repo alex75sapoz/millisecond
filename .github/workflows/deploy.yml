@@ -17,7 +17,7 @@ concurrency:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     environment: ${{ inputs.environment }}
     steps:
       - name: Checkout
@@ -27,6 +27,14 @@ jobs:
       - name: Commit
         id: commit
         run: echo "message=$(git log -1 --pretty=%B)" >> "$GITHUB_OUTPUT"
+
+      - name: Python
+        id: python
+        uses: actions/setup-python@v5
+
+      - name: Test
+        id: test
+        run: pytest
 
       - name: Configuration
         id: configuration
