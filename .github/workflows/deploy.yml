@@ -26,9 +26,7 @@ jobs:
 
       - name: Commit
         id: commit
-        run: |
-          echo "message=$(git log -1 --pretty=%B)" >> "$GITHUB_OUTPUT"
-          echo "branch=$(git rev-parse --abbrev-ref HEAD)" >> "$GITHUB_OUTPUT"
+        run: echo "message=$(git log -1 --pretty=%B)" >> "$GITHUB_OUTPUT"
 
       - name: Configuration
         id: configuration
@@ -49,7 +47,7 @@ jobs:
           workspace: ${{ vars.TERRAFORM_WORKSPACE_NAME }}
           configuration_version: ${{ steps.configuration.outputs.configuration_version_id }}
           plan_only: ${{ !inputs.apply }}
-          message: ${{ '[' && steps.commit.outputs.branch && ']' }} ${{ steps.commit.outputs.message }}
+          message: '[${{ github.ref_name }}] ${{ steps.commit.outputs.message }}'
       
       - name: Apply
         id: apply
