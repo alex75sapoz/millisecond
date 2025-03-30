@@ -18,3 +18,4 @@ terraform.rc
 .venv
 __pycache__
 .pytest_cache
+terraform/functions/python_packages*

@@ -26,7 +26,7 @@ jobs:
 
       - name: Commit
         id: commit
-        run: echo "message=$(git log -1 --pretty=%B)" >> "$GITHUB_OUTPUT"
+        run: echo 'message=$(git log -1 --pretty=%B)' >> $GITHUB_OUTPUT
 
       - name: Python
         id: python
@@ -35,7 +35,10 @@ jobs:
           python-version: 3.x
 
       - name: Dependencies
-        run: pip install -r requirements.txt
+        run: |
+          pip install --upgrade pip
+          pip install --requirement requirements.txt
+          python python_packages.py
 
       - name: Test
         id: test
