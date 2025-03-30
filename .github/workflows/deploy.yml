@@ -39,7 +39,7 @@ jobs:
 
       - name: Test
         id: test
-        run: python pytest
+        run: pytest
 
       - name: Configuration
         id: configuration
