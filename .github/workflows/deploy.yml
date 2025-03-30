@@ -1,5 +1,5 @@
 name: Deploy
-run-name: Deploy to ${{ inputs.environment }} by @${{ github.actor }}
+run-name: ${{ inputs.apply && '[apply]' || '[plan]' }} ${{ inputs.environment }}
 
 permissions:
   contents: read
@@ -20,6 +20,10 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     steps:
+      - name: Commit
+        id: commit
+        run: echo "message=$(git log -1 --pretty=%B)" >> "$GITHUB_OUTPUT"
+
       - name: Checkout
         id: checkout
         uses: actions/checkout@v4
@@ -43,6 +47,7 @@ jobs:
           workspace: ${{ vars.TERRAFORM_WORKSPACE_NAME }}
           configuration_version: ${{ steps.configuration.outputs.configuration_version_id }}
           plan_only: ${{ !inputs.apply }}
+          message: ${{ steps.commit.outputs.message }} by ${{ github.actor }}
       
       - name: Apply
         id: apply
@@ -52,6 +57,5 @@ jobs:
           token: ${{secrets.TERRAFORM_API_TOKEN }}
           organization: ${{ vars.TERRAFORM_ORGANIZATION_NAME }}
           run: ${{ steps.plan.outputs.run_id }}
-          comment: Apply run from GitHub Actions ${{ github.sha }}
 
       
