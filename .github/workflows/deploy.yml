@@ -1,0 +1,57 @@
+name: Deploy
+run-name: Deploy to ${{ inputs.environment }} by @${{ github.actor }}
+
+permissions:
+  contents: read
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: environment
+      apply:
+        type: boolean
+
+concurrency:
+  group: one-at-a-time
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v4
+
+      - name: Configuration
+        id: configuration
+        uses: hashicorp/tfc-workflows-github/actions/upload-configuration@v1.3.2
+        with:
+          token: ${{ secrets.TERRAFORM_API_TOKEN }}
+          organization: ${{ vars.TERRAFORM_ORGANIZATION_NAME }}
+          workspace: ${{ vars.TERRAFORM_WORKSPACE_NAME }}
+          speculative: ${{ !inputs.apply }}
+          directory: ${{ github.workspace && '/terraform' }}
+
+      - name: Plan
+        id: plan
+        uses: hashicorp/tfc-workflows-github/actions/create-run@v1.3.2
+        with:
+          token: ${{secrets.TERRAFORM_API_TOKEN }}
+          organization: ${{ vars.TERRAFORM_ORGANIZATION_NAME }}
+          workspace: ${{ vars.TERRAFORM_WORKSPACE_NAME }}
+          configuration_version: ${{ steps.configuration.outputs.configuration_version_id }}
+          plan_only: ${{ !inputs.apply }}
+      
+      - name: Apply
+        id: apply
+        uses: hashicorp/tfc-workflows-github/actions/apply-run@v1.3.2
+        if: fromJSON(steps.plan.outputs.payload).data.attributes.actions.IsConfirmable
+        with:
+          token: ${{secrets.TERRAFORM_API_TOKEN }}
+          organization: ${{ vars.TERRAFORM_ORGANIZATION_NAME }}
+          run: ${{ steps.plan.outputs.run_id }}
+          comment: Apply run from GitHub Actions ${{ github.sha }}
+
+      
